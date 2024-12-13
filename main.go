@@ -145,8 +145,8 @@ func main() {
 		r.PathPrefix(route.Path).Handler(reverseProxy(route))
 	}
 
-	// Setup the redirect handler
-	if config.Redirects.RedirectURI != "" {
+	// Setup the redirect handler if redirects and redirect_uri are specified
+	if config.Redirects != nil && config.Redirects.RedirectURI != "" {
 		log.Printf("Adding redirect handler to: %s\n", config.Redirects.RedirectURI)
 		r.PathPrefix("/redirect").Handler(redirectHandler(config.Redirects.RedirectURI))
 	} else {

@@ -7,7 +7,7 @@ type Route struct {
 type Config struct {
 	Static  Route `yaml:"static"`
 	Proxies []Route `yaml:"proxies"`
-	Redirects RedirectConfig `yaml:"redirects"`
+	Redirects *RedirectConfig `yaml:"redirects"`
 }
 
 type RedirectConfig struct {
