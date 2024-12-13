@@ -5,6 +5,6 @@ type Route struct {
 	Url  string
 }
 type Config struct {
-	Static  Route `yaml:"static"`
-	Proxies []Route `yaml:"proxies"`
+	Static  Route
+	Proxies []Route
 }
