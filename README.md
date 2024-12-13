@@ -10,6 +10,7 @@ Create a file called serve.yaml in the working directory of the `serve` binary a
 2. Has ability to setup dynamic reverse proxies so we can route requests without CORS or any issues.
 3. Reverse proxy returns the entire HTTP Headers and response as is.
 4. We can proxy any HTTP method to the specified backend URL.
+5. Supports redirection based on the `redirect_uri` query parameter. If a request contains this parameter, it will be redirected to the specified URI.
 
 ## License
 MIT

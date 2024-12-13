@@ -116,6 +116,19 @@ func reverseProxy(route Route) http.HandlerFunc {
 	}
 }
 
+// Middleware to handle redirect_uri query parameter
+func redirectMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		redirectURI := r.URL.Query().Get("redirect_uri")
+		if redirectURI != "" {
+			log.Printf("Redirecting to: %s\n", redirectURI)
+			http.Redirect(w, r, redirectURI, http.StatusFound)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	configFileName := "./serve.yaml"
 	configBytes, err := os.ReadFile(configFileName)
@@ -135,7 +148,7 @@ func main() {
 	// Setup all the reverse proxies
 	for _, route := range config.Proxies {
 		log.Printf("Adding route: %s to url: %s\n", route.Path, route.Url)
-		r.PathPrefix(route.Path).Handler(reverseProxy(route))
+		r.PathPrefix(route.Path).Handler(redirectMiddleware(reverseProxy(route)))
 	}
 
 	staticDir := config.Static.Path
