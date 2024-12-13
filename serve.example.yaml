@@ -5,3 +5,5 @@ proxies:
   # All paths are prefix matched so it's a good practice to have a trailing / at tne end of the path
   - path: /api/
     url: ${API_URI}
+redirects:
+  redirect_uri: https://example.com  # This field is optional

@@ -116,6 +116,13 @@ func reverseProxy(route Route) http.HandlerFunc {
 	}
 }
 
+func redirectHandler(redirectURI string) http.HandlerFunc {
+	return func(rw http.ResponseWriter, req *http.Request) {
+		log.Printf("[redirect] Redirecting to: %s\n", redirectURI)
+		http.Redirect(rw, req, redirectURI, http.StatusFound)
+	}
+}
+
 func main() {
 	configFileName := "./serve.yaml"
 	configBytes, err := os.ReadFile(configFileName)
@@ -136,6 +143,14 @@ func main() {
 	for _, route := range config.Proxies {
 		log.Printf("Adding route: %s to url: %s\n", route.Path, route.Url)
 		r.PathPrefix(route.Path).Handler(reverseProxy(route))
+	}
+
+	// Setup the redirect handler
+	if config.Redirects.RedirectURI != "" {
+		log.Printf("Adding redirect handler to: %s\n", config.Redirects.RedirectURI)
+		r.PathPrefix("/redirect").Handler(redirectHandler(config.Redirects.RedirectURI))
+	} else {
+		log.Printf("No redirect_uri specified. Skipping redirect handler setup.\n")
 	}
 
 	staticDir := config.Static.Path
