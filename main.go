@@ -45,7 +45,9 @@ func (w *NotFoundRedirectRespWr) Write(p []byte) (int, error) {
 			return len(p), err
 		} else {
 			// log.Printf("Returning the contents of %s: %s\n", filePathToReturn, string(contents))
-			w.ResponseWriter.Header().Add("Content-Type", http.DetectContentType(contents))
+			contentType := http.DetectContentType(contents)
+			log.Printf("Detected content type: %s\n", contentType)
+			w.ResponseWriter.Header().Add("Content-Type", contentType)
 			w.ResponseWriter.WriteHeader(http.StatusOK)
 			return w.ResponseWriter.Write(contents)
 		}
